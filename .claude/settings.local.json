@@ -9,7 +9,8 @@
       "Bash(cp:*)",
       "Bash(find:*)",
       "Bash(timeout 5 npm run dev)",
-      "Bash(gtimeout:*)"
+      "Bash(gtimeout:*)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }

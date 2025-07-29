@@ -1,18 +1,15 @@
-import sqlite3 from 'sqlite3';
-import { promisify } from 'util';
+import Database from 'better-sqlite3';
 
-export class Database {
-  private db: sqlite3.Database;
+export class DatabaseWrapper {
+  private db: Database.Database;
 
   constructor(filename = 'bbq_planner.db') {
-    this.db = new sqlite3.Database(filename);
+    this.db = new Database(filename);
     this.init();
   }
 
-  private async init() {
-    const run = promisify(this.db.run.bind(this.db));
-    
-    await run(`
+  private init() {
+    this.db.exec(`
       CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
@@ -20,7 +17,7 @@ export class Database {
       )
     `);
 
-    await run(`
+    this.db.exec(`
       CREATE TABLE IF NOT EXISTS dishes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
@@ -34,7 +31,7 @@ export class Database {
       )
     `);
 
-    await run(`
+    this.db.exec(`
       CREATE TABLE IF NOT EXISTS ingredients (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         dish_id INTEGER NOT NULL,
@@ -47,7 +44,7 @@ export class Database {
       )
     `);
 
-    await run(`
+    this.db.exec(`
       CREATE TABLE IF NOT EXISTS meal_helpers (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         dish_id INTEGER NOT NULL,
@@ -61,22 +58,14 @@ export class Database {
     `);
   }
 
-  async query(sql: string, params: any[] = []): Promise<any[]> {
-    return new Promise((resolve, reject) => {
-      this.db.all(sql, params, (err, rows) => {
-        if (err) reject(err);
-        else resolve(rows);
-      });
-    });
+  query(sql: string, params: any[] = []): any[] {
+    const stmt = this.db.prepare(sql);
+    return stmt.all(...params);
   }
 
-  async run(sql: string, params: any[] = []): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.db.run(sql, params, function(err) {
-        if (err) reject(err);
-        else resolve(this);
-      });
-    });
+  run(sql: string, params: any[] = []): any {
+    const stmt = this.db.prepare(sql);
+    return stmt.run(...params);
   }
 
   close() {
@@ -84,4 +73,4 @@ export class Database {
   }
 }
 
-export const db = new Database();
+export const db = new DatabaseWrapper();
