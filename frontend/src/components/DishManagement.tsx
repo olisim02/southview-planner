@@ -154,8 +154,8 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
   return (
     <div style={{ display: 'grid', gap: '30px' }}>
       {/* Add User Section */}
-      <div className="dish-card">
-        <h3 style={{ marginBottom: '15px', color: '#4a90e2' }}>Add New User</h3>
+      <div className="dish-card" style={{ backgroundColor: '#2c3e50', color: '#ffffff' }}>
+        <h3 style={{ marginBottom: '15px', color: '#e67e22' }}>Add New User</h3>
         <form onSubmit={handleCreateUser} style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           <input
             type="text"
@@ -168,14 +168,14 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
             Add User
           </button>
         </form>
-        <div style={{ marginTop: '15px', fontSize: '0.9rem', color: '#666' }}>
+        <div style={{ marginTop: '15px', fontSize: '0.9rem', color: '#bdc3c7' }}>
           <strong>Current users:</strong> {users.map(u => u.name).join(', ') || 'None'}
         </div>
       </div>
 
       {/* Add Dish Section */}
-      <div className="dish-card">
-        <h3 style={{ marginBottom: '15px', color: '#4a90e2' }}>Add New Dish</h3>
+      <div className="dish-card" style={{ backgroundColor: '#2c3e50', color: '#ffffff' }}>
+        <h3 style={{ marginBottom: '15px', color: '#e67e22' }}>Add New Dish</h3>
         <form onSubmit={handleCreateDish} style={{ display: 'grid', gap: '15px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
             <input
@@ -241,24 +241,25 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
       </div>
 
       {/* Dishes List */}
-      <div className="dish-card">
-        <h3 style={{ marginBottom: '15px', color: '#4a90e2' }}>Manage Dishes</h3>
+      <div className="dish-card" style={{ backgroundColor: '#2c3e50', color: '#ffffff' }}>
+        <h3 style={{ marginBottom: '15px', color: '#e67e22' }}>Manage Dishes</h3>
         {dishes.length === 0 ? (
-          <p style={{ color: '#666', textAlign: 'center', padding: '20px' }}>No dishes added yet</p>
+          <p style={{ color: '#bdc3c7', textAlign: 'center', padding: '20px' }}>No dishes added yet</p>
         ) : (
           <div style={{ display: 'grid', gap: '10px' }}>
             {dishes.map(dish => (
               <div key={dish.id} style={{ 
                 padding: '15px', 
-                border: '1px solid #ddd', 
+                border: '1px solid #4a5f7a', 
                 borderRadius: '8px',
-                backgroundColor: selectedDish?.id === dish.id ? '#e3f2fd' : '#f9f9f9',
+                backgroundColor: selectedDish?.id === dish.id ? '#d35400' : '#34495e',
+                color: '#ffffff',
                 boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div onClick={() => setSelectedDish(dish)} style={{ cursor: 'pointer', flex: 1 }}>
                     <strong>{dish.name}</strong> - {dish.day} {dish.meal}
-                    {dish.cook_user_name && <span style={{ color: '#666' }}> (Cook: {dish.cook_user_name})</span>}
+                    {dish.cook_user_name && <span style={{ color: '#bdc3c7' }}> (Cook: {dish.cook_user_name})</span>}
                   </div>
                   <button 
                     onClick={() => handleDeleteDish(dish.id!)}
@@ -282,12 +283,12 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
 
       {/* Dish Details */}
       {selectedDish && (
-        <div className="dish-card">
-          <h3 style={{ marginBottom: '15px', color: '#4a90e2' }}>Manage: {selectedDish.name}</h3>
+        <div className="dish-card" style={{ backgroundColor: '#2c3e50', color: '#ffffff' }}>
+          <h3 style={{ marginBottom: '15px', color: '#e67e22' }}>Manage: {selectedDish.name}</h3>
           
           {/* Add Ingredient */}
-          <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f0f4f8', borderRadius: '8px' }}>
-            <h4 style={{ marginBottom: '10px' }}>Add Ingredient</h4>
+          <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#34495e', borderRadius: '8px', border: '1px solid #4a5f7a' }}>
+            <h4 style={{ marginBottom: '10px', color: '#f39c12' }}>Add Ingredient</h4>
             <form onSubmit={handleAddIngredient} style={{ display: 'grid', gap: '10px' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '10px' }}>
                 <input
@@ -325,14 +326,16 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
           {/* Ingredients List */}
           {selectedDish.ingredients && selectedDish.ingredients.length > 0 && (
             <div style={{ marginBottom: '20px' }}>
-              <h4 style={{ marginBottom: '10px' }}>Ingredients:</h4>
+              <h4 style={{ marginBottom: '10px', color: '#f39c12' }}>Ingredients:</h4>
               <ul style={{ listStyle: 'none' }}>
                 {selectedDish.ingredients.map(ingredient => (
                   <li key={ingredient.id} style={{ 
                     padding: '8px', 
-                    backgroundColor: '#f8f9fa', 
+                    backgroundColor: '#34495e', 
                     marginBottom: '5px', 
                     borderRadius: '4px',
+                    border: '1px solid #4a5f7a',
+                    color: '#ffffff',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center'
@@ -340,7 +343,7 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
                     <span>
                       {ingredient.quantity && `${ingredient.quantity} `}{ingredient.name}
                       {ingredient.assigned_user_name && (
-                        <span style={{ color: '#4a90e2', fontWeight: 500 }}> (bringing: {ingredient.assigned_user_name})</span>
+                        <span style={{ color: '#f39c12', fontWeight: 500 }}> (bringing: {ingredient.assigned_user_name})</span>
                       )}
                     </span>
                     <button 
@@ -364,8 +367,8 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
           )}
 
           {/* Add Helper */}
-          <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f0f4f8', borderRadius: '8px' }}>
-            <h4 style={{ marginBottom: '10px' }}>Add Helper</h4>
+          <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#34495e', borderRadius: '8px', border: '1px solid #4a5f7a' }}>
+            <h4 style={{ marginBottom: '10px', color: '#f39c12' }}>Add Helper</h4>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               {users.filter(user => 
                 !selectedDish.helpers?.some(helper => helper.user_id === user.id) &&
@@ -386,14 +389,16 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
           {/* Helpers List */}
           {selectedDish.helpers && selectedDish.helpers.length > 0 && (
             <div>
-              <h4 style={{ marginBottom: '10px' }}>Helpers:</h4>
+              <h4 style={{ marginBottom: '10px', color: '#f39c12' }}>Helpers:</h4>
               <ul style={{ listStyle: 'none' }}>
                 {selectedDish.helpers.map(helper => (
                   <li key={helper.id} style={{ 
                     padding: '8px', 
-                    backgroundColor: '#f8f9fa', 
+                    backgroundColor: '#34495e', 
                     marginBottom: '5px', 
                     borderRadius: '4px',
+                    border: '1px solid #4a5f7a',
+                    color: '#ffffff',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center'
