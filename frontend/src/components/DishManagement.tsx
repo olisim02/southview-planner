@@ -168,7 +168,7 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
             Add User
           </button>
         </form>
-        <div style={{ marginTop: '15px', fontSize: '0.9rem', color: '#bdc3c7' }}>
+        <div style={{ marginTop: '15px', fontSize: '0.9rem', color: '#403321' }}>
           <strong>Current users:</strong> {users.map(u => u.name).join(', ') || 'None'}
         </div>
       </div>
@@ -244,7 +244,7 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
       <div className="dish-card" style={{ backgroundColor: '#2c3e50', color: '#ffffff' }}>
         <h3 style={{ marginBottom: '15px', color: '#e67e22' }}>Manage Dishes</h3>
         {dishes.length === 0 ? (
-          <p style={{ color: '#bdc3c7', textAlign: 'center', padding: '20px' }}>No dishes added yet</p>
+          <p style={{ color: '#403321', textAlign: 'center', padding: '20px' }}>No dishes added yet</p>
         ) : (
           <div style={{ display: 'grid', gap: '10px' }}>
             {dishes.map(dish => (
@@ -259,7 +259,7 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div onClick={() => setSelectedDish(dish)} style={{ cursor: 'pointer', flex: 1 }}>
                     <strong>{dish.name}</strong> - {dish.day} {dish.meal}
-                    {dish.cook_user_name && <span style={{ color: '#bdc3c7' }}> (Cook: {dish.cook_user_name})</span>}
+                    {dish.cook_user_name && <span style={{ color: '#403321' }}> (Cook: {dish.cook_user_name})</span>}
                   </div>
                   <button 
                     onClick={() => handleDeleteDish(dish.id!)}
