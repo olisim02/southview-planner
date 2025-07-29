@@ -154,7 +154,7 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
   return (
     <div style={{ display: 'grid', gap: '30px' }}>
       {/* Add User Section */}
-      <div className="dish-card">
+      <div className="dish-card" style={{ backgroundColor: '#f8f9fa' }}>
         <h3 style={{ marginBottom: '15px', color: '#4a90e2' }}>Add New User</h3>
         <form onSubmit={handleCreateUser} style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           <input
@@ -174,7 +174,7 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
       </div>
 
       {/* Add Dish Section */}
-      <div className="dish-card">
+      <div className="dish-card" style={{ backgroundColor: '#f8f9fa' }}>
         <h3 style={{ marginBottom: '15px', color: '#4a90e2' }}>Add New Dish</h3>
         <form onSubmit={handleCreateDish} style={{ display: 'grid', gap: '15px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
@@ -241,7 +241,7 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
       </div>
 
       {/* Dishes List */}
-      <div className="dish-card">
+      <div className="dish-card" style={{ backgroundColor: '#f8f9fa' }}>
         <h3 style={{ marginBottom: '15px', color: '#4a90e2' }}>Manage Dishes</h3>
         {dishes.length === 0 ? (
           <p style={{ color: '#666', textAlign: 'center', padding: '20px' }}>No dishes added yet</p>
@@ -282,7 +282,7 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
 
       {/* Dish Details */}
       {selectedDish && (
-        <div className="dish-card">
+        <div className="dish-card" style={{ backgroundColor: '#f8f9fa' }}>
           <h3 style={{ marginBottom: '15px', color: '#4a90e2' }}>Manage: {selectedDish.name}</h3>
           
           {/* Add Ingredient */}
