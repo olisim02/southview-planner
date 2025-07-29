@@ -175,6 +175,21 @@ app.delete('/api/meal-helpers/:id', (req, res) => {
   }
 });
 
+// Reset endpoint - clears all data
+app.post('/api/reset', (req, res) => {
+  try {
+    // Delete all data in reverse order due to foreign key constraints
+    db.run('DELETE FROM meal_helpers');
+    db.run('DELETE FROM ingredients');
+    db.run('DELETE FROM dishes');
+    db.run('DELETE FROM users');
+    
+    res.json({ message: 'All data cleared successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to reset data' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
