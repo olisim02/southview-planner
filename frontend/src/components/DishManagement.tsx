@@ -252,7 +252,8 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
                 padding: '15px', 
                 border: '1px solid #ddd', 
                 borderRadius: '8px',
-                backgroundColor: selectedDish?.id === dish.id ? '#e3f2fd' : '#f9f9f9'
+                backgroundColor: selectedDish?.id === dish.id ? '#e3f2fd' : '#ffffff',
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div onClick={() => setSelectedDish(dish)} style={{ cursor: 'pointer', flex: 1 }}>
@@ -285,8 +286,8 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
           <h3 style={{ marginBottom: '15px', color: '#4a90e2' }}>Manage: {selectedDish.name}</h3>
           
           {/* Add Ingredient */}
-          <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f0f4f8', borderRadius: '8px' }}>
-            <h4 style={{ marginBottom: '10px' }}>Add Ingredient</h4>
+          <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#e8f4f8', borderRadius: '8px', border: '1px solid #d1e7ed' }}>
+            <h4 style={{ marginBottom: '10px', color: '#2c5aa0' }}>Add Ingredient</h4>
             <form onSubmit={handleAddIngredient} style={{ display: 'grid', gap: '10px' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '10px' }}>
                 <input
@@ -329,9 +330,10 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
                 {selectedDish.ingredients.map(ingredient => (
                   <li key={ingredient.id} style={{ 
                     padding: '8px', 
-                    backgroundColor: '#f8f9fa', 
+                    backgroundColor: '#ffffff', 
                     marginBottom: '5px', 
                     borderRadius: '4px',
+                    border: '1px solid #e0e0e0',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center'
@@ -363,8 +365,8 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
           )}
 
           {/* Add Helper */}
-          <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f0f4f8', borderRadius: '8px' }}>
-            <h4 style={{ marginBottom: '10px' }}>Add Helper</h4>
+          <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#e8f4f8', borderRadius: '8px', border: '1px solid #d1e7ed' }}>
+            <h4 style={{ marginBottom: '10px', color: '#2c5aa0' }}>Add Helper</h4>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               {users.filter(user => 
                 !selectedDish.helpers?.some(helper => helper.user_id === user.id) &&
@@ -390,9 +392,10 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
                 {selectedDish.helpers.map(helper => (
                   <li key={helper.id} style={{ 
                     padding: '8px', 
-                    backgroundColor: '#f8f9fa', 
+                    backgroundColor: '#ffffff', 
                     marginBottom: '5px', 
                     borderRadius: '4px',
+                    border: '1px solid #e0e0e0',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center'
