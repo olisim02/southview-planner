@@ -23,8 +23,8 @@ app.get('/api/users', async (req, res) => {
 app.post('/api/users', async (req, res) => {
     try {
         const { name } = req.body;
-        const result = await database_1.db.run('INSERT INTO users (name) VALUES (?)', [name]);
-        res.json({ id: result.lastID, name });
+        const result = await database_1.db.query('INSERT INTO users (name) VALUES ($1) RETURNING id', [name]);
+        res.json({ id: result[0].id, name });
     }
     catch (error) {
         res.status(500).json({ error: 'Failed to create user' });
@@ -56,13 +56,13 @@ app.get('/api/dishes', async (req, res) => {
         SELECT i.*, u.name as assigned_user_name 
         FROM ingredients i 
         LEFT JOIN users u ON i.assigned_user_id = u.id 
-        WHERE i.dish_id = ?
+        WHERE i.dish_id = $1
       `, [dish.id]);
             const helpers = await database_1.db.query(`
         SELECT mh.*, u.name as user_name 
         FROM meal_helpers mh 
         JOIN users u ON mh.user_id = u.id 
-        WHERE mh.dish_id = ?
+        WHERE mh.dish_id = $1
       `, [dish.id]);
             dish.ingredients = ingredients;
             dish.helpers = helpers;
@@ -76,8 +76,8 @@ app.get('/api/dishes', async (req, res) => {
 app.post('/api/dishes', async (req, res) => {
     try {
         const { name, description, cook_user_id, day, meal, cooking_time } = req.body;
-        const result = await database_1.db.run('INSERT INTO dishes (name, description, cook_user_id, day, meal, cooking_time) VALUES (?, ?, ?, ?, ?, ?)', [name, description, cook_user_id, day, meal, cooking_time]);
-        res.json({ id: result.lastID, ...req.body });
+        const result = await database_1.db.query('INSERT INTO dishes (name, description, cook_user_id, day, meal, cooking_time) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id', [name, description, cook_user_id, day, meal, cooking_time]);
+        res.json({ id: result[0].id, ...req.body });
     }
     catch (error) {
         res.status(500).json({ error: 'Failed to create dish' });
@@ -87,7 +87,7 @@ app.put('/api/dishes/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const { name, description, cook_user_id, day, meal, cooking_time } = req.body;
-        await database_1.db.run('UPDATE dishes SET name = ?, description = ?, cook_user_id = ?, day = ?, meal = ?, cooking_time = ? WHERE id = ?', [name, description, cook_user_id, day, meal, cooking_time, id]);
+        await database_1.db.query('UPDATE dishes SET name = $1, description = $2, cook_user_id = $3, day = $4, meal = $5, cooking_time = $6 WHERE id = $7', [name, description, cook_user_id, day, meal, cooking_time, id]);
         res.json({ id: parseInt(id), ...req.body });
     }
     catch (error) {
@@ -97,7 +97,7 @@ app.put('/api/dishes/:id', async (req, res) => {
 app.delete('/api/dishes/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        await database_1.db.run('DELETE FROM dishes WHERE id = ?', [id]);
+        await database_1.db.query('DELETE FROM dishes WHERE id = $1', [id]);
         res.json({ message: 'Dish deleted successfully' });
     }
     catch (error) {
@@ -108,8 +108,8 @@ app.delete('/api/dishes/:id', async (req, res) => {
 app.post('/api/ingredients', async (req, res) => {
     try {
         const { dish_id, name, quantity, assigned_user_id } = req.body;
-        const result = await database_1.db.run('INSERT INTO ingredients (dish_id, name, quantity, assigned_user_id) VALUES (?, ?, ?, ?)', [dish_id, name, quantity, assigned_user_id]);
-        res.json({ id: result.lastID, ...req.body });
+        const result = await database_1.db.query('INSERT INTO ingredients (dish_id, name, quantity, assigned_user_id) VALUES ($1, $2, $3, $4) RETURNING id', [dish_id, name, quantity, assigned_user_id]);
+        res.json({ id: result[0].id, ...req.body });
     }
     catch (error) {
         res.status(500).json({ error: 'Failed to create ingredient' });
@@ -119,7 +119,7 @@ app.put('/api/ingredients/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const { name, quantity, assigned_user_id } = req.body;
-        await database_1.db.run('UPDATE ingredients SET name = ?, quantity = ?, assigned_user_id = ? WHERE id = ?', [name, quantity, assigned_user_id, id]);
+        await database_1.db.query('UPDATE ingredients SET name = $1, quantity = $2, assigned_user_id = $3 WHERE id = $4', [name, quantity, assigned_user_id, id]);
         res.json({ id: parseInt(id), ...req.body });
     }
     catch (error) {
@@ -129,7 +129,7 @@ app.put('/api/ingredients/:id', async (req, res) => {
 app.delete('/api/ingredients/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        await database_1.db.run('DELETE FROM ingredients WHERE id = ?', [id]);
+        await database_1.db.query('DELETE FROM ingredients WHERE id = $1', [id]);
         res.json({ message: 'Ingredient deleted successfully' });
     }
     catch (error) {
@@ -140,8 +140,8 @@ app.delete('/api/ingredients/:id', async (req, res) => {
 app.post('/api/meal-helpers', async (req, res) => {
     try {
         const { dish_id, user_id, role } = req.body;
-        const result = await database_1.db.run('INSERT INTO meal_helpers (dish_id, user_id, role) VALUES (?, ?, ?)', [dish_id, user_id, role || 'helper']);
-        res.json({ id: result.lastID, ...req.body });
+        const result = await database_1.db.query('INSERT INTO meal_helpers (dish_id, user_id, role) VALUES ($1, $2, $3) RETURNING id', [dish_id, user_id, role || 'helper']);
+        res.json({ id: result[0].id, ...req.body });
     }
     catch (error) {
         res.status(500).json({ error: 'Failed to add helper' });
@@ -150,13 +150,39 @@ app.post('/api/meal-helpers', async (req, res) => {
 app.delete('/api/meal-helpers/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        await database_1.db.run('DELETE FROM meal_helpers WHERE id = ?', [id]);
+        await database_1.db.query('DELETE FROM meal_helpers WHERE id = $1', [id]);
         res.json({ message: 'Helper removed successfully' });
     }
     catch (error) {
         res.status(500).json({ error: 'Failed to remove helper' });
     }
 });
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// Reset endpoint - clears all data
+app.post('/api/reset', async (req, res) => {
+    try {
+        // Delete all data in reverse order due to foreign key constraints
+        await database_1.db.query('DELETE FROM meal_helpers');
+        await database_1.db.query('DELETE FROM ingredients');
+        await database_1.db.query('DELETE FROM dishes');
+        await database_1.db.query('DELETE FROM users');
+        res.json({ message: 'All data cleared successfully' });
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Failed to reset data' });
+    }
 });
+// Initialize database and start server
+async function startServer() {
+    try {
+        await database_1.db.initialize();
+        console.log('Database initialized successfully');
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+    }
+    catch (error) {
+        console.error('Failed to initialize database:', error);
+        process.exit(1);
+    }
+}
+startServer();

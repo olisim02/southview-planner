@@ -12,7 +12,10 @@
       "Bash(gtimeout:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(git rm:*)",
+      "Bash(git submodule deinit -f backend/frontend)",
+      "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_8FBCbnh7OHJT@ep-jolly-sky-abj22kxe-pooler.eu-west-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require\" npm start)"
     ],
     "deny": []
   }

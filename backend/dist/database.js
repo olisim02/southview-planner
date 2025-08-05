@@ -1,86 +1,95 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.db = exports.Database = void 0;
-const sqlite3_1 = __importDefault(require("sqlite3"));
-const util_1 = require("util");
-class Database {
-    constructor(filename = 'bbq_planner.db') {
-        this.db = new sqlite3_1.default.Database(filename);
-        this.init();
+exports.db = exports.DatabaseWrapper = void 0;
+const pg_1 = require("pg");
+class DatabaseWrapper {
+    constructor() {
+        this.pool = new pg_1.Pool({
+            connectionString: process.env.DATABASE_URL,
+            ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+        });
+    }
+    async initialize() {
+        await this.init();
     }
     async init() {
-        const run = (0, util_1.promisify)(this.db.run.bind(this.db));
-        await run(`
-      CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-        await run(`
-      CREATE TABLE IF NOT EXISTS dishes (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        description TEXT,
-        cook_user_id INTEGER,
-        day TEXT NOT NULL CHECK (day IN ('friday', 'saturday', 'sunday')),
-        meal TEXT NOT NULL CHECK (meal IN ('lunch', 'dinner', 'breakfast', 'snack')),
-        cooking_time TEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (cook_user_id) REFERENCES users (id)
-      )
-    `);
-        await run(`
-      CREATE TABLE IF NOT EXISTS ingredients (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        dish_id INTEGER NOT NULL,
-        name TEXT NOT NULL,
-        quantity TEXT,
-        assigned_user_id INTEGER,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (dish_id) REFERENCES dishes (id) ON DELETE CASCADE,
-        FOREIGN KEY (assigned_user_id) REFERENCES users (id)
-      )
-    `);
-        await run(`
-      CREATE TABLE IF NOT EXISTS meal_helpers (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        dish_id INTEGER NOT NULL,
-        user_id INTEGER NOT NULL,
-        role TEXT DEFAULT 'helper',
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (dish_id) REFERENCES dishes (id) ON DELETE CASCADE,
-        FOREIGN KEY (user_id) REFERENCES users (id),
-        UNIQUE(dish_id, user_id)
-      )
-    `);
+        const client = await this.pool.connect();
+        try {
+            await client.query(`
+        CREATE TABLE IF NOT EXISTS users (
+          id SERIAL PRIMARY KEY,
+          name TEXT NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+            await client.query(`
+        CREATE TABLE IF NOT EXISTS dishes (
+          id SERIAL PRIMARY KEY,
+          name TEXT NOT NULL,
+          description TEXT,
+          cook_user_id INTEGER,
+          day TEXT NOT NULL CHECK (day IN ('friday', 'saturday', 'sunday')),
+          meal TEXT NOT NULL CHECK (meal IN ('lunch', 'dinner', 'breakfast', 'snack')),
+          cooking_time TEXT,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (cook_user_id) REFERENCES users (id)
+        )
+      `);
+            await client.query(`
+        CREATE TABLE IF NOT EXISTS ingredients (
+          id SERIAL PRIMARY KEY,
+          dish_id INTEGER NOT NULL,
+          name TEXT NOT NULL,
+          quantity TEXT,
+          assigned_user_id INTEGER,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (dish_id) REFERENCES dishes (id) ON DELETE CASCADE,
+          FOREIGN KEY (assigned_user_id) REFERENCES users (id)
+        )
+      `);
+            await client.query(`
+        CREATE TABLE IF NOT EXISTS meal_helpers (
+          id SERIAL PRIMARY KEY,
+          dish_id INTEGER NOT NULL,
+          user_id INTEGER NOT NULL,
+          role TEXT DEFAULT 'helper',
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (dish_id) REFERENCES dishes (id) ON DELETE CASCADE,
+          FOREIGN KEY (user_id) REFERENCES users (id),
+          UNIQUE(dish_id, user_id)
+        )
+      `);
+        }
+        finally {
+            client.release();
+        }
     }
     async query(sql, params = []) {
-        return new Promise((resolve, reject) => {
-            this.db.all(sql, params, (err, rows) => {
-                if (err)
-                    reject(err);
-                else
-                    resolve(rows);
-            });
-        });
+        const client = await this.pool.connect();
+        try {
+            const result = await client.query(sql, params);
+            return result.rows;
+        }
+        finally {
+            client.release();
+        }
     }
     async run(sql, params = []) {
-        return new Promise((resolve, reject) => {
-            this.db.run(sql, params, function (err) {
-                if (err)
-                    reject(err);
-                else
-                    resolve(this);
-            });
-        });
+        const client = await this.pool.connect();
+        try {
+            const result = await client.query(sql, params);
+            return {
+                lastInsertRowid: result.rows[0]?.id,
+                changes: result.rowCount
+            };
+        }
+        finally {
+            client.release();
+        }
     }
-    close() {
-        this.db.close();
+    async close() {
+        await this.pool.end();
     }
 }
-exports.Database = Database;
-exports.db = new Database();
+exports.DatabaseWrapper = DatabaseWrapper;
+exports.db = new DatabaseWrapper();
