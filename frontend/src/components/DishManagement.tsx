@@ -252,7 +252,7 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
                 padding: '15px', 
                 border: '1px solid #4a5f7a', 
                 borderRadius: '8px',
-                backgroundColor: selectedDish?.id === dish.id ? '#d35400' : '#34495e',
+                backgroundColor: selectedDish?.id === dish.id ? '#d35400' : '#2c3e50',
                 color: '#ffffff',
                 boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
               }}>
@@ -287,7 +287,7 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
           <h3 style={{ marginBottom: '15px', color: '#e67e22' }}>Manage: {selectedDish.name}</h3>
           
           {/* Add Ingredient */}
-          <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#34495e', borderRadius: '8px', border: '1px solid #4a5f7a' }}>
+          <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#2c3e50', borderRadius: '8px', border: '1px solid #4a5f7a' }}>
             <h4 style={{ marginBottom: '10px', color: '#f39c12' }}>Add Ingredient</h4>
             <form onSubmit={handleAddIngredient} style={{ display: 'grid', gap: '10px' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '10px' }}>
@@ -329,17 +329,17 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
               <h4 style={{ marginBottom: '10px', color: '#f39c12' }}>Ingredients:</h4>
               <ul style={{ listStyle: 'none' }}>
                 {selectedDish.ingredients.map(ingredient => (
-                  <li key={ingredient.id} style={{ 
-                    padding: '8px', 
-                    backgroundColor: '#34495e', 
-                    marginBottom: '5px', 
-                    borderRadius: '4px',
-                    border: '1px solid #4a5f7a',
-                    color: '#ffffff',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}>
+                                     <li key={ingredient.id} style={{ 
+                     padding: '8px', 
+                     backgroundColor: '#2c3e50', 
+                     marginBottom: '5px', 
+                     borderRadius: '4px',
+                     border: '1px solid #4a5f7a',
+                     color: '#ffffff',
+                     display: 'flex',
+                     justifyContent: 'space-between',
+                     alignItems: 'center'
+                   }}>
                     <span>
                       {ingredient.quantity && `${ingredient.quantity} `}{ingredient.name}
                       {ingredient.assigned_user_name && (
@@ -367,7 +367,7 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
           )}
 
           {/* Add Helper */}
-          <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#34495e', borderRadius: '8px', border: '1px solid #4a5f7a' }}>
+          <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#2c3e50', borderRadius: '8px', border: '1px solid #4a5f7a' }}>
             <h4 style={{ marginBottom: '10px', color: '#f39c12' }}>Add Helper</h4>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               {users.filter(user => 
@@ -392,17 +392,17 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
               <h4 style={{ marginBottom: '10px', color: '#f39c12' }}>Helpers:</h4>
               <ul style={{ listStyle: 'none' }}>
                 {selectedDish.helpers.map(helper => (
-                  <li key={helper.id} style={{ 
-                    padding: '8px', 
-                    backgroundColor: '#34495e', 
-                    marginBottom: '5px', 
-                    borderRadius: '4px',
-                    border: '1px solid #4a5f7a',
-                    color: '#ffffff',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}>
+                                     <li key={helper.id} style={{ 
+                     padding: '8px', 
+                     backgroundColor: '#2c3e50', 
+                     marginBottom: '5px', 
+                     borderRadius: '4px',
+                     border: '1px solid #4a5f7a',
+                     color: '#ffffff',
+                     display: 'flex',
+                     justifyContent: 'space-between',
+                     alignItems: 'center'
+                   }}>
                     <span>{helper.user_name}</span>
                     <button 
                       onClick={() => handleRemoveHelper(helper.id!)}
