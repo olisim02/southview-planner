@@ -248,7 +248,7 @@ const DishManagement: React.FC<DishManagementProps> = ({ onDishesChange }) => {
         ) : (
           <div style={{ display: 'grid', gap: '10px' }}>
             {dishes.map(dish => (
-              <div key={dish.id} style={{ 
+              <div key={dish.id} className="dish-item-custom" style={{ 
                 padding: '15px', 
                 border: '1px solid #4a5f7a', 
                 borderRadius: '8px',
