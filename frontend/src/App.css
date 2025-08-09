@@ -108,44 +108,7 @@ body {
   font-weight: 600;
 }
 
-.dish-card {
-  background: white;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
-  transition: all 0.3s ease;
-}
 
-.dish-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
-}
-
-.dish-name {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-.dish-cook {
-  color: #666;
-  font-style: italic;
-  margin-bottom: 8px;
-}
-
-.dish-description {
-  color: #555;
-  margin-bottom: 10px;
-  line-height: 1.4;
-}
-
-.dish-time {
-  color: #888;
-  font-size: 0.9rem;
-  margin-bottom: 10px;
-}
 
 .ingredients-section, .helpers-section {
   margin-top: 12px;
